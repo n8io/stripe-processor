@@ -1,0 +1,142 @@
+html
+    link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Open+Sans')
+    style.
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .payment {
+        max-width: 50%;
+        transition: 1s;
+        -webkit-transition: 1s;
+        font-family: Open Sans;
+        font-size: 2em;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+      }
+      .payment.success {
+        color: #fff;
+        background-color: #4CAF50;
+      }
+      .payment.failure {
+        color: #fff;
+        background-color: #F44336;
+      }
+  body
+    .payment Processing...
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.17.0/URI.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+    script(src='https://checkout.stripe.com/checkout.js')
+    script.
+      var $msg = $('.payment');
+      var uri = new URI(window.location);
+
+      $(function() {
+        openPayment();
+      });
+
+      function openPayment() {
+        log('Opening');
+
+        var details = parseDetails();
+
+        var handler = StripeCheckout.configure({
+          key: '#{process.env.STRIPE_PUBLIC_KEY}',
+          image: details.imageUrl,
+          locale: 'auto',
+          token: onToken,
+          closed: onClosed
+        });
+
+        // Open Checkout with further options
+        handler.open({
+          name: details.name, //'The League of Extraordinary Idiots',
+          description: details.description, // '2015 Entry & Keeper Fees',
+          amount: details.amount,
+          email: details.email
+        });
+      }
+
+      function onToken(token) {
+        log(token.id)
+
+        processPayment(token);
+
+        return;
+      }
+
+      function onClosed() {
+        if(!window.submitted) {
+          openPayment();
+        }
+      }
+
+      function processPayment(token) {
+        log('Processing payment');
+
+        var data = parseDetails();
+        data.token = token.id;
+        data.email = token.email;
+
+        console.log(token);
+
+        window.submitted = true;
+
+        $.ajax({
+          type: 'POST',
+          url: '/api/stripe/payment',
+          data: data,
+          success: onSuccess,
+          error: onError,
+          dataType: 'json'
+        });
+      }
+
+      function onSuccess() {
+        var qs = parseDetails();
+
+        if(qs.r) {
+          window.location = qs.r;
+        }
+        else {
+          $msg
+            .addClass('success')
+            .html('Thanks. Check your email for a receipt.');
+        }
+      }
+
+      function onError() {
+        $msg
+            .addClass('failure')
+            .html('There was an error.');
+      }
+
+      function log(msg) {
+        console.log(msg);
+      }
+
+      function parseDetails() {
+        var qs = uri.search(true);
+
+        var data = {
+          email: qs.e || null,
+          amount: parseInt(qs.a, 10) || 0,
+          description: qs.d || null,
+          name: qs.n || null,
+          redirectUrl: qs.r || null,
+          imageUrl: qs.i || null
+        };
+
+        switch (data.imageUrl) {
+          case 'tloei':
+            data.imageUrl = 'https://dl.dropboxusercontent.com/u/452959/hosted/trophy.PNG';
+            break;
+          default:
+            break;
+        }
+
+        return data;
+      }
