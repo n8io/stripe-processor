@@ -66,7 +66,7 @@ function parsePaymentData(body) {
   };
 
   const props = [,
-    { key: 'email', default: null }
+    { key: 'email', default: null },
     { key: 'amount', default: 0 },
     { key: 'currency', default: 'usd' },
     { key: 'token', default: null },
