@@ -46,8 +46,11 @@ function postPayment(req, res) {
     currency: paymentData.currency,
     source: paymentData.token,
     description: paymentData.description,
+    receipt_email: paymentData.email,
     metadata: {
-      email: paymentData.email
+      email: paymentData.email,
+      customerFirstName: paymentData.cfn,
+      customerLastName: paymentData.cln
     }
   }, function(err, charge) {
     if (err) {
@@ -70,7 +73,9 @@ function parsePaymentData(body) {
     { key: 'amount', default: 0 },
     { key: 'currency', default: 'usd' },
     { key: 'token', default: null },
-    { key: 'description', default: '' }
+    { key: 'description', default: '' },
+    { key: 'cfn', default: null },
+    { key: 'cln', default: null }
   ];
 
   if (body) {
