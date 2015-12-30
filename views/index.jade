@@ -140,5 +140,24 @@ html
             break;
         }
 
+        var $head = $('head');
+        var title = '';
+        var faviconHref = data.imageUrl || 'https://stripe.com/favicon.ico';
+
+        if (!$head.find('title').length) {
+          if (data.name && data.description) {
+            title = data.name + ' :: ' + data.description;
+          }
+          else if (data.name) {
+            title = data.name;
+          }
+          else {
+            title = 'Stripe Payment';
+          }
+
+          $head.append('<title>' + title + '</title>');
+          $head.append('<link href="' + faviconHref + '" rel="shortcut icon" />');
+        }
+
         return data;
       }
