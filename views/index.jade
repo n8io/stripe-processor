@@ -92,7 +92,7 @@ html
       }
 
       function onClosed() {
-        if(!window.submitted) {
+        if(!window.submitted && $(window).width() > 480) {
           openPayment();
         }
       }
