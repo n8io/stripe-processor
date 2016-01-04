@@ -1,5 +1,6 @@
 html
     link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Open+Sans')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
     style.
       body {
         display: flex;
@@ -17,6 +18,24 @@ html
         border-radius: 10px;
         border: 1px solid transparent;
       }
+      .payment a { display: none; }
+
+      @media (max-width: 480px) {
+        .payment div { display: none; }
+        .payment a {
+          display: block;
+          font-size: 26px;
+          background-color: #fff;
+          text-decoration: none;
+          padding: 5px;
+          border: 1px solid rgba(0,0,0,.5);
+          border-radius: 5px;
+          color: #555;
+        }
+        .payment a:hover {
+          background-color: rgba(0,0,0,.1)
+        }
+      }
       .payment.success {
         color: #fff;
         background-color: #4CAF50;
@@ -26,7 +45,9 @@ html
         background-color: #F44336;
       }
   body
-    .payment Processing...
+    .payment
+      div Processing...
+      a(href='javascript://',onclick='openPayment()') Click to Pay
     script(src='https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.17.0/URI.min.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
     script(src='https://checkout.stripe.com/checkout.js')
@@ -35,7 +56,9 @@ html
       var uri = new URI(window.location);
 
       $(function() {
-        openPayment();
+        if ($(window).width() > 480) {
+          openPayment();
+        }
       });
 
       function openPayment() {
