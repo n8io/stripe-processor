@@ -1,7 +1,7 @@
+![The Kitchen Sink](/stripe-payment.png)
+
 # stripe-processor
 A simple, but flexible web app to process a payment using the Stripe API.
-
-![The Kitchen Sink](/stripe-payment.png)
 
 ## Show Me Already
 * [Demo](http://stripe-processor.herokuapp.com/?&c=USD&o=1&n=2016%20Riviera%20Maya%20Vacation&d=The%20remaining%20balance%20for%20the%20vacation&f=Nate&l=Clark&a=380000&i=http://goo.gl/YRqIm1&b=http://goo.gl/YRqIm1)
