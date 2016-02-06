@@ -12,18 +12,19 @@ A simple, but flexible web app to process a payment using the Stripe API.
 1. open [http://localhost:3000/?a=100&n=Hello%20World!&d=A%20short%20description%20here](http://localhost:3000/?a=100&n=Hello%20World!&d=A%20short%20description%20here)
 
 ## Options
-Please note that all string parameter values must be url encoded to display properly.
+It is recommended that all values for string parameters be url encoded.
 
 Available query string parameters:
 ```
 {
   a: 'The amount in pennies. Must be a whole number. Required. E.g., $30 would be 3000',
-  n: 'The title you would like to give the payment. Required. E.g. September Golf Trip',
-  d: 'The short description you would like to give the payment. Optional. E.g. Robert Trent Jones Golf Trail',
-  e: 'The email in which you want to send a receipt to. Optional. E.g. test@test.com',
-  i: 'The url for the payment icon. Optional. E.g. https://my.cdn.com/tiger-woods.jpg',
-  b: 'The background url for the payment page. Optional. E.g. https://my.cdn.com/the-masters.jpg',
-  o: 'The flag that specifies if the amount should add the Stripe transaction fees to the total amount or not. Optional. Default: false'
+  n: 'The title you would like to give the payment. Required. September Golf Trip',
+  d: 'The short description you would like to give the payment. Optional. Robert Trent Jones Golf Trail',
+  e: 'The email in which you want to send a receipt to. Optional. test@test.com',
+  i: 'The url for the payment icon. Optional. https://my.cdn.com/tiger-woods.jpg',
+  b: 'The background url for the payment page. Optional. https://my.cdn.com/the-masters.jpg',
+  o: 'Automatically add the Stripe transaction fees to the total amount. Must be a truthy value to enable. Optional. Defaults to `false`'
+  c: 'ISO currency code. Optional. Defaults to `USD`.'
 }
 ```
 The 'b' parameter can also be a valid hex color if you prefer a monochrome background other than the default white. E.g. b=ff0 or b=F9F9F9.
