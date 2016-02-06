@@ -12,6 +12,8 @@ A simple, but flexible web app to process a payment using the Stripe API.
 1. open [http://localhost:3000/?a=100&n=Hello%20World!&d=A%20short%20description%20here](http://localhost:3000/?a=100&n=Hello%20World!&d=A%20short%20description%20here)
 
 ## Options
+Please note that all string parameter values must be url encoded to display properly.
+
 Available query string parameters:
 ```
 {
