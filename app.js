@@ -1,10 +1,10 @@
-// Set your secret key: remember to change this to your live secret key in production
-// See your keys here https://dashboard.stripe.com/account/apikeys
+require('dotenv-safe').load({silent: true});
+
+const stripeAccoutKey = process.env.STRIPE_SECRET_KEY;
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const express = require('express');
-const stripeAccoutKey = process.env.STRIPE_SECRET_KEY;
 const stripe = require('stripe')(stripeAccoutKey);
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '0.0.0.0';
@@ -22,6 +22,7 @@ app.set('views', './views')
 app.set('view engine', 'jade');
 
 app
+  .get('/config', getConfig)
   .get('/', getIndex)
   .post('/api/stripe/payment', postPayment)
   ;
@@ -33,6 +34,13 @@ const server = app.listen(port, host, function () {
   console.log(info(`${pj.name}@${pj.version} running on ${host}:${port}`));
 });
 
+function getConfig(req, res) {
+  return res.json({
+    serviceRatePercent: parseFloat(process.env.STRIPE_TRANSACTION_RATE, 10),
+    serviceFlatFee: parseFloat(process.env.STRIPE_TRANSACTION_FLAT_FEE, 10)
+  });
+}
+
 function getIndex(req, res) {
   return res.render('index');
 }
@@ -40,19 +48,23 @@ function getIndex(req, res) {
 function postPayment(req, res) {
   // Get the credit card details submitted by the form
   const paymentData = parsePaymentData(req.body);
-
-  const charge = stripe.charges.create({
+  const chargeInfo = {
     amount: paymentData.amount, // amount in cents, again
     currency: paymentData.currency,
     source: paymentData.token,
     description: paymentData.description,
     receipt_email: paymentData.email,
     metadata: {
-      email: paymentData.email,
-      customerFirstName: paymentData.cfn,
-      customerLastName: paymentData.cln
+      email: paymentData.email
     }
-  }, function(err, charge) {
+  };
+
+  if (paymentData.customer) {
+    chargeInfo.metadata.customerFirstName = paymentData.customer.firstName;
+    chargeInfo.metadata.customerLastName = paymentData.customer.lastName;
+  }
+
+  const charge = stripe.charges.create(chargeInfo, function(err, charge) {
     if (err) {
       console.log(error(JSON.stringify(err, null, 2)));
 
@@ -74,8 +86,7 @@ function parsePaymentData(body) {
     { key: 'currency', default: 'usd' },
     { key: 'token', default: null },
     { key: 'description', default: '' },
-    { key: 'cfn', default: null },
-    { key: 'cln', default: null }
+    { key: 'customer', default: null }
   ];
 
   if (body) {

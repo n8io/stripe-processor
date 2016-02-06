@@ -1,7 +1,7 @@
 {
   "name": "stripe-processor",
-  "version": "1.0.0",
-  "description": "A simple web app to process a payment token through the Stripe API",
+  "version": "1.1.0",
+  "description": "A simple, but flexible web app to process a payment using the Stripe API.",
   "main": "app.js",
   "scripts": {
     "start": "node app",
@@ -15,6 +15,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "chalk": "^1.1.1",
+    "dotenv-safe": "^2.2.0",
     "express": "^4.13.3",
     "jade": "^1.11.0",
     "morgan": "^1.6.1",

@@ -1,14 +1,32 @@
 html
-    link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Open+Sans')
+    link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Open+Sans', id='css-google-fonts')
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.7/jquery.fullPage.min.js', id='css-fullpage')
     meta(name='viewport' content='width=device-width, initial-scale=1')
     style.
       body {
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease
+      }
+
+      body.resolved {
+        opacity: 1;
+      }
+
+      .section {
+        background: #fff no-repeat;
+        background-size: cover;
+      }
+
+      .fp-tableCell {
         display: flex;
         align-items: center;
         justify-content: center;
       }
+
       .payment {
-        max-width: 50%;
+        max-width: 60%;
         transition: 1s;
         -webkit-transition: 1s;
         font-family: Open Sans;
@@ -17,23 +35,27 @@ html
         padding: 20px;
         border-radius: 10px;
         border: 1px solid transparent;
+        background-color: rgba(255,255,255,.7);
       }
       .payment a { display: none; }
 
       @media (max-width: 480px) {
+        .payment {
+          background-color: transparent;
+        }
         .payment div { display: none; }
         .payment a {
           display: block;
           font-size: 28px;
           background-color: #fff;
           text-decoration: none;
-          padding: 5px;
+          padding: 10px;
           border: 1px solid rgba(0,0,0,.5);
           border-radius: 5px;
           color: #555;
         }
         .payment a:hover {
-          background-color: rgba(0,0,0,.1)
+          background-color: rgba(255,255,255,.6)
         }
       }
       .payment.success {
@@ -45,142 +67,180 @@ html
         background-color: #F44336;
       }
   body
-    .payment
-      div Processing...
-      a(href='javascript://',onclick='openPayment()') Start Here
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.17.0/URI.min.js')
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
-    script(src='https://checkout.stripe.com/checkout.js')
+    #fullpage
+      .section
+        .payment
+          div Processing...
+          a(href='javascript://',onclick='openPayment()') Start Payment
+    script(src='//cdnjs.cloudflare.com/ajax/libs/URI.js/1.17.0/URI.min.js', id='js-URI')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js', id='js-jquery')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.7/jquery.fullPage.min.js', id='js-fullpage')
+    script(src='//checkout.stripe.com/checkout.js', id='js-stripe')
     script.
-      var $msg = $('.payment');
-      var uri = new URI(window.location);
+        var $msg = $('.payment');
+        var uri = new URI(window.location);
+        var config;
 
-      $(function() {
-        if ($(window).width() > 480) {
-          openPayment();
-        }
-      });
+        $(function() {
+          $('#fullpage').fullpage();
 
-      function openPayment() {
-        log('Opening');
+          $.getJSON('/config', function(data) {
+            config = data;
 
-        var details = parseDetails();
+            parseDetails();
 
-        var handler = StripeCheckout.configure({
-          key: '#{process.env.STRIPE_PUBLIC_KEY}',
-          image: details.imageUrl,
-          locale: 'auto',
-          token: onToken,
-          closed: onClosed
+            $('body').addClass('resolved');
+
+            if ($(window).width() > 480) {
+              openPayment();
+            }
+          });
         });
 
-        // Open Checkout with further options
-        handler.open({
-          name: details.name, //'The League of Extraordinary Idiots',
-          description: details.description, // '2015 Entry & Keeper Fees',
-          amount: details.amount,
-          email: details.email
-        });
-      }
+        function openPayment() {
+          log('Opening');
 
-      function onToken(token) {
-        log(token.id)
+          var details = parseDetails();
 
-        processPayment(token);
+          var handler = StripeCheckout.configure({
+            key: '#{process.env.STRIPE_PUBLIC_KEY}',
+            image: details.iconImageUrl,
+            locale: 'auto',
+            token: onToken,
+            closed: onClosed
+          });
 
-        return;
-      }
-
-      function onClosed() {
-        if(!window.submitted && $(window).width() > 480) {
-          openPayment();
-        }
-      }
-
-      function processPayment(token) {
-        log('Processing payment');
-
-        var data = parseDetails();
-        data.token = token.id;
-        data.email = token.email;
-
-        console.log(token);
-
-        window.submitted = true;
-
-        $.ajax({
-          type: 'POST',
-          url: '/api/stripe/payment',
-          data: data,
-          success: onSuccess,
-          error: onError,
-          dataType: 'json'
-        });
-      }
-
-      function onSuccess() {
-        var qs = parseDetails();
-
-        if(qs.r) {
-          window.location = qs.r;
-        }
-        else {
-          $msg
-            .addClass('success')
-            .html('Thanks. Check your email for a receipt.');
-        }
-      }
-
-      function onError() {
-        $msg
-            .addClass('failure')
-            .html('There was an error.');
-      }
-
-      function log(msg) {
-        console.log(msg);
-      }
-
-      function parseDetails() {
-        var qs = uri.search(true);
-
-        var data = {
-          email: qs.e || null,
-          amount: parseInt(qs.a, 10) || 0,
-          description: qs.d || null,
-          name: qs.n || null,
-          redirectUrl: qs.r || null,
-          imageUrl: qs.i || null,
-          cfn: qs.f || null,
-          cln: qs.l || null
-        };
-
-        switch (data.imageUrl) {
-          case 'tloei':
-            data.imageUrl = 'https://dl.dropboxusercontent.com/u/452959/hosted/trophy.PNG';
-            break;
-          default:
-            break;
+          // Open Checkout with further options
+          handler.open({
+            name: details.name, //'The League of Extraordinary Idiots',
+            description: details.description, // '2015 Entry & Keeper Fees',
+            amount: details.amount,
+            email: details.email
+          });
         }
 
-        var $head = $('head');
-        var title = '';
-        var faviconHref = data.imageUrl || 'https://stripe.com/favicon.ico';
+        function onToken(token) {
+          log(token.id)
 
-        if (!$head.find('title').length) {
-          if (data.name && data.description) {
-            title = data.name + ' :: ' + data.description;
+          processPayment(token);
+
+          return;
+        }
+
+        function onClosed() {
+          if(!window.submitted && $(window).width() > 480) {
+            openPayment();
           }
-          else if (data.name) {
-            title = data.name;
+        }
+
+        function processPayment(token) {
+          log('Processing payment');
+
+          var data = parseDetails();
+          data.token = token.id;
+          data.email = token.email;
+
+          console.log(token);
+
+          window.submitted = true;
+
+          $.ajax({
+            type: 'POST',
+            url: '/api/stripe/payment',
+            data: data,
+            success: onSuccess,
+            error: onError,
+            dataType: 'json'
+          });
+        }
+
+        function onSuccess() {
+          var qs = parseDetails();
+
+          if(qs.r) {
+            window.location = qs.r;
           }
           else {
-            title = 'Stripe Payment';
+            $msg
+              .addClass('success')
+              .html('Thanks. Check your email for a receipt.');
           }
-
-          $head.append('<title>' + title + '</title>');
-          $head.append('<link href="' + faviconHref + '" rel="shortcut icon" />');
         }
 
-        return data;
-      }
+        function onError() {
+          $msg
+            .addClass('failure')
+            .html('There was an error.');
+        }
+
+        function log(msg) {
+          console.log(msg);
+        }
+
+        function parseDetails() {
+          var qs = uri.search(true);
+          var hexReg = /(^[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]$)|(^[0-9a-f][0-9a-f][0-9a-f]$)/ig;
+
+          var data = {
+            email: qs.e || null,
+            amount: parseInt(qs.a, 10) || 0,
+            description: qs.d || null,
+            name: qs.n || null,
+            redirectUrl: qs.r || null,
+            iconImageUrl: qs.i || null,
+            offset: !!qs.o && ['0', 'false'].indexOf(qs.o) === -1,
+            background: qs.b
+          };
+
+          if (qs.f || qs.l) {
+            data.customer = {
+              firstName: qs.f || null,
+              lastName: qs.l || null
+            };
+          }
+
+          if (data.offset) { // Do the math to add the service fee to the final amount
+            var flatFee = config.serviceFlatFee * 100;
+            data.amount = parseInt(parseFloat(data.amount * (1 + (config.serviceRatePercent / 100))).toFixed(0)) + flatFee;
+          }
+
+          switch (data.iconImageUrl) {
+            case 'tloei':
+              data.iconImageUrl = 'https://dl.dropboxusercontent.com/u/452959/hosted/trophy.PNG';
+              break;
+            default:
+              break;
+          }
+
+          if (data.background) {
+            var isHexColor = hexReg.test(data.background);
+
+            if (isHexColor) {
+              $('.section').css({'background-color': data.background})
+            }
+            else {
+              $('.section').css({'background': 'url("' + data.background + '")'});
+            }
+          }
+
+          var $head = $('head');
+          var title = '';
+          var faviconHref = data.iconImageUrl || 'https://stripe.com/favicon.ico';
+
+          if (!$head.find('title').length) {
+            if (data.name && data.description) {
+              title = data.name + ' :: ' + data.description;
+            }
+            else if (data.name) {
+              title = data.name;
+            }
+            else {
+              title = 'Stripe Payment';
+            }
+
+            $head.append('<title>' + title + '</title>');
+            $head.append('<link href="' + faviconHref + '" rel="shortcut icon" />');
+          }
+
+          return data;
+        }
