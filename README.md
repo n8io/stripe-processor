@@ -27,6 +27,4 @@ Available query string parameters:
 The 'b' parameter can also be a valid hex color if you prefer a monochrome background other than the default white. E.g. b=ff0 or b=F9F9F9.
 
 The kitchen sink example. The resulting page output is shown at the top of this page.
-```
-  http://localhost:3000/?&b=http://goo.gl/oS7JcT&c=USD&o=false&n=September%20Golf%20Trip&d=Robert%20Trent%20Jones%20Golf%20Trail&f=Nate&l=Clark&a=49999&i=http://goo.gl/n5dbYn
-```
+[The Kitchen Sink](http://localhost:3000/?&b=http://goo.gl/oS7JcT&c=USD&o=false&n=September%20Golf%20Trip&d=Robert%20Trent%20Jones%20Golf%20Trail&f=Nate&l=Clark&a=49999&i=http://goo.gl/n5dbYn)
