@@ -28,6 +28,9 @@ Available query string parameters:
   b: 'The background url for the payment page. Optional. https://my.cdn.com/the-masters.jpg',
   o: 'Automatically add the Stripe transaction fees to the total amount. Must be a truthy value to enable. Optional. Defaults to `false`'
   c: 'ISO currency code. Optional. Defaults to `USD`.'
+  r: 'The redirect url after a successful payment. Optional. http://my.store.com',
+  f: 'The customer's first name. It will be saved as metadata on the transaction. Optional.',
+  l: 'The customer's last name. It will be saved as metadata on the transaction. Optional.'
 }
 ```
 The 'b' parameter can also be a valid hex color if you prefer a monochrome background other than the default white. E.g. b=ff0 or b=F9F9F9.

@@ -157,13 +157,14 @@ html
         function onSuccess() {
           var qs = parseDetails();
 
-          if(qs.r) {
-            window.location = qs.r;
-          }
-          else {
-            $msg
-              .addClass('success')
-              .html('Thanks. Check your email for a receipt.');
+          $msg
+            .addClass('success')
+            .html('Thanks. Check your email for a receipt.');
+
+          if(qs.redirectUrl) {
+            setTimeout(function() {
+              window.location = qs.redirectUrl;
+            }, 3000);
           }
         }
 
