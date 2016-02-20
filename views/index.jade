@@ -115,7 +115,8 @@ html
             name: details.name, //'The League of Extraordinary Idiots',
             description: details.description, // '2015 Entry & Keeper Fees',
             amount: details.amount,
-            email: details.email
+            email: details.email,
+            panelLabel: details.label
           });
         }
 
@@ -187,6 +188,7 @@ html
             amount: parseInt(qs.a, 10) || 0,
             description: qs.d || null,
             name: qs.n || null,
+            label: qs.t || null,
             redirectUrl: qs.r || null,
             iconImageUrl: qs.i || null,
             offset: !!qs.o && ['0', 'false'].indexOf(qs.o) === -1,
@@ -205,14 +207,6 @@ html
             data.amount = parseInt(parseFloat(data.amount * (1 + (config.serviceRatePercent / 100))).toFixed(0)) + flatFee;
           }
 
-          switch (data.iconImageUrl) {
-            case 'tloei':
-              data.iconImageUrl = 'https://dl.dropboxusercontent.com/u/452959/hosted/trophy.PNG';
-              break;
-            default:
-              break;
-          }
-
           if (data.background) {
             var isHexColor = hexReg.test(data.background);
 
@@ -220,7 +214,10 @@ html
               $('.section').css({'background-color': data.background})
             }
             else {
-              $('.section').css({'background': 'url("' + data.background + '")'});
+              $('.section')
+                .css({'background': 'url("' + data.background + '") no-repeat'})
+                .css({'background-size': 'cover'})
+                ;
             }
           }
 

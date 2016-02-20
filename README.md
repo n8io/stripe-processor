@@ -25,6 +25,7 @@ Available query string parameters:
   d: 'The short description you would like to give the payment. Optional. Robert Trent Jones Golf Trail',
   e: 'The email in which you want to send a receipt to. Optional. test@test.com',
   i: 'The url for the payment icon. Optional. https://my.cdn.com/tiger-woods.jpg',
+  t: 'The button text. Optional. Pay {{amount}} for Things. Note the {{amount}} will be replaced by the actual amount'
   b: 'The background url for the payment page. Optional. https://my.cdn.com/the-masters.jpg',
   o: 'Automatically add the Stripe transaction fees to the total amount. Must be a truthy value to enable. Optional. Defaults to `false`'
   c: 'ISO currency code. Optional. Defaults to `USD`.'
