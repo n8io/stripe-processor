@@ -75,6 +75,7 @@ html
     script(src='//cdnjs.cloudflare.com/ajax/libs/URI.js/1.17.0/URI.min.js', id='js-URI')
     script(src='//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js', id='js-jquery')
     script(src='//cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.7.7/jquery.fullPage.min.js', id='js-fullpage')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.5.0/lodash.min.js', id='js-lodash')
     script(src='//checkout.stripe.com/checkout.js', id='js-stripe')
     script.
         var $msg = $('.payment');
@@ -195,6 +196,26 @@ html
             background: qs.b
           };
 
+          var metadata = _(qs)
+            .keys()
+            .filter(function(k) {
+              return k.indexOf('m_') === 0;
+            })
+            .map(function(k) {
+              var kvp = {};
+
+              kvp[k.replace('m_', '')] = qs[k];
+
+              return kvp;
+            })
+            .value()
+            ;
+
+          if (metadata.length) {
+            // We have metadata to add
+            data.metadata = metadata;
+          }
+
           if (qs.f || qs.l) {
             data.customer = {
               firstName: qs.f || null,
@@ -205,6 +226,10 @@ html
           if (data.offset) { // Do the math to add the service fee to the final amount
             var flatFee = config.serviceFlatFee * 100;
             data.amount = parseInt(parseFloat(data.amount * (1 + (config.serviceRatePercent / 100))).toFixed(0)) + flatFee;
+
+            if (data.amount < 3000) {
+              data.amount += 1;
+            }
           }
 
           if (data.background) {

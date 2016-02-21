@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const express = require('express');
+const _ = require('lodash')
 const stripe = require('stripe')(stripeAccoutKey);
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '0.0.0.0';
@@ -64,6 +65,18 @@ function postPayment(req, res) {
     chargeInfo.metadata.customerLastName = paymentData.customer.lastName;
   }
 
+  if (paymentData.metadata && paymentData.metadata.length) {
+    paymentData.metadata.forEach((m) => {
+      const key = _.keys(m)[0];
+
+      if(key) {
+        chargeInfo.metadata[key] = m[key];
+      }
+    });
+
+    // console.log('chargeInfo', JSON.stringify(chargeInfo, null, 2));
+  }
+
   const charge = stripe.charges.create(chargeInfo, function(err, charge) {
     if (err) {
       console.log(error(JSON.stringify(err, null, 2)));
@@ -86,13 +99,15 @@ function parsePaymentData(body) {
     { key: 'currency', default: 'usd' },
     { key: 'token', default: null },
     { key: 'description', default: '' },
-    { key: 'customer', default: null }
+    { key: 'customer', default: null },
+    { key: 'metadata', default: null }
   ];
 
   if (body) {
     props.forEach(function(p) {
       data[p.key] = body[p.key] || p.default;
     });
+
   }
 
   return data;
