@@ -3,5 +3,11 @@
   "description": "A simple, but flexible web app to process a payment using the Stripe API.",
   "repository": "https://github.com/n8io/stripe-processor.git",
   "logo": "https://pbs.twimg.com/profile_images/497432038492733440/eW6tXeq3.png",
-  "keywords": ["stripe", "node", "express"]
+  "keywords": ["stripe", "node", "express"],
+  "env": {
+    "STRIPE_PUBLIC_KEY": "sk_live_",
+    "STRIPE_SECRET_KEY": "pk_live_",
+    "STRIPE_TRANSACTION_RATE": 2.999,
+    "STRIPE_TRANSACTION_FLAT_FEE": 0.30    
+  }
 }
