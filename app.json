@@ -16,10 +16,12 @@
       "description": "Your secret key for your Stripe account, e.g. sk_live_..."
     },
     "STRIPE_TRANSACTION_RATE": {
-      "description": "The percentage rate for all Stripe transactions, e.g. 2.999"
+      "description": "The percentage rate for all Stripe transactions, e.g. 2.999",
+      "value": "2.999"
     },
     "STRIPE_TRANSACTION_FLAT_FEE": {
-      "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30"
+      "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30",
+      "value": "0.30"
     }
   }
 }
