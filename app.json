@@ -20,6 +20,6 @@
     "STRIPE_TRANSACTION_FLAT_FEE": {
       "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30",
       "required": true
-    },
+    }
   }
 }
