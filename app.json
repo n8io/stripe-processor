@@ -1,0 +1,7 @@
+{
+  "name": "stripe-processor",
+  "description": "A simple, but flexible web app to process a payment using the Stripe API.",
+  "repository": "https://github.com/n8io/stripe-processor.git",
+  "logo": "https://pbs.twimg.com/profile_images/497432038492733440/eW6tXeq3.png",
+  "keywords": ["stripe", "node", "express"]
+}

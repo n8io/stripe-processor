@@ -7,7 +7,14 @@ A simple, but flexible web app to process a payment using the Stripe API.
 * [Demo](http://stripe-processor.herokuapp.com/?&c=USD&o=1&n=2016%20Riviera%20Maya%20Vacation&d=The%20remaining%20balance%20for%20the%20vacation&f=Nate&l=Clark&a=380000&i=http://goo.gl/YRqIm1&b=http://goo.gl/YRqIm1)
 
 ## Getting started
+### Deploy to Heroku
+1. [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+1. Set the environment values in your new app's settings. All are listed in the ``.env.example` file.
+1. Restart the dyno.
 
+OR
+
+## Deploy locally
 1. `npm install`
 1. `cat .env.example > .env`
 1. In the `.env` file, enter the required Stripe info
