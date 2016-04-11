@@ -9,8 +9,8 @@ A simple, but flexible web app to process a payment using the Stripe API.
 ## Getting started
 ### Deploy to Heroku
 1. [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-1. Set the environment values in your new app's settings. All are listed in the ``.env.example` file.
-1. Restart the dyno.
+1. Set the environment values in your new app's settings.
+1. Done.
 
 OR
 

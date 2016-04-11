@@ -5,9 +5,21 @@
   "logo": "https://pbs.twimg.com/profile_images/497432038492733440/eW6tXeq3.png",
   "keywords": ["stripe", "node", "express"],
   "env": {
-    "STRIPE_PUBLIC_KEY": "sk_live_",
-    "STRIPE_SECRET_KEY": "pk_live_",
-    "STRIPE_TRANSACTION_RATE": 2.999,
-    "STRIPE_TRANSACTION_FLAT_FEE": 0.30    
+    "STRIPE_PUBLIC_KEY": {
+      "description": "Your public key for your Stripe account, e.g. pk_live_...",
+      "required": true
+    },
+    "STRIPE_SECRET_KEY": {
+      "description": "Your secret key for your Stripe account, e.g. sk_live_...",
+      "required": true
+    },
+    "STRIPE_TRANSACTION_RATE": {
+      "description": "The percentage rate for all Stripe transactions, e.g. 2.999",
+      "required": true
+    },
+    "STRIPE_TRANSACTION_FLAT_FEE": {
+      "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30",
+      "required": true
+    },
   }
 }
