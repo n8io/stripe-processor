@@ -3,23 +3,23 @@
   "description": "A simple, but flexible web app to process a payment using the Stripe API.",
   "repository": "https://github.com/n8io/stripe-processor.git",
   "logo": "https://pbs.twimg.com/profile_images/497432038492733440/eW6tXeq3.png",
-  "keywords": ["stripe", "node", "express"],
+  "keywords": [
+    "stripe",
+    "node",
+    "express"
+  ],
   "env": {
     "STRIPE_PUBLIC_KEY": {
-      "description": "Your public key for your Stripe account, e.g. pk_live_...",
-      "required": true
+      "description": "Your public key for your Stripe account, e.g. pk_live_..."
     },
     "STRIPE_SECRET_KEY": {
-      "description": "Your secret key for your Stripe account, e.g. sk_live_...",
-      "required": true
+      "description": "Your secret key for your Stripe account, e.g. sk_live_..."
     },
     "STRIPE_TRANSACTION_RATE": {
-      "description": "The percentage rate for all Stripe transactions, e.g. 2.999",
-      "required": true
+      "description": "The percentage rate for all Stripe transactions, e.g. 2.999"
     },
     "STRIPE_TRANSACTION_FLAT_FEE": {
-      "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30",
-      "required": true
+      "description": "The flat transaction fee for all Stripe transactions, e.g. 0.30"
     }
   }
 }
