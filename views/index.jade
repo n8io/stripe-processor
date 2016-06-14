@@ -117,7 +117,8 @@ html
             description: details.description, // '2015 Entry & Keeper Fees',
             amount: details.amount,
             email: details.email,
-            panelLabel: details.label
+            panelLabel: details.label,
+            zipCode: details.zipCode
           });
         }
 
@@ -141,8 +142,6 @@ html
           var data = parseDetails();
           data.token = token.id;
           data.email = token.email;
-
-          console.log(token);
 
           window.submitted = true;
 
@@ -193,7 +192,8 @@ html
             redirectUrl: qs.r || null,
             iconImageUrl: qs.i || null,
             offset: !!qs.o && ['0', 'false'].indexOf(qs.o) === -1,
-            background: qs.b
+            background: qs.b,
+            zipCode: !!qs.z && ['0', 'false'].indexOf(qs.z) === -1,
           };
 
           var metadata = _(qs)
